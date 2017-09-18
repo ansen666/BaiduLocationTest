@@ -1,5 +1,8 @@
 package com.ansen.baidumaptest;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +18,10 @@ public class MainActivity extends AppCompatActivity {
     private LocationClient client = null;
     private TextView tvLocationResult;
 
+    //位置权限需要临时获取
+    private String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
+    private final int PERMS_REQUEST_CODE = 200;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +29,16 @@ public class MainActivity extends AppCompatActivity {
 
         tvLocationResult= (TextView) findViewById(R.id.tv_location_result);
 
+        //Android 6.0以上版本需要临时获取权限
+        if(Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP_MR1&&
+                PackageManager.PERMISSION_GRANTED!=checkSelfPermission(perms[0])) {
+            requestPermissions(perms,PERMS_REQUEST_CODE);
+        }else{
+            startRequestLocation();
+        }
+    }
+
+    private void startRequestLocation(){
         LocationClientOption mOption=new LocationClientOption();
         mOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         mOption.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
@@ -130,6 +147,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults){
+        switch(permsRequestCode){
+            case PERMS_REQUEST_CODE:
+                boolean storageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                if(storageAccepted){
+                    startRequestLocation();
+                }
+                break;
+
+        }
+    }
 
     @Override
     protected void onDestroy() {
