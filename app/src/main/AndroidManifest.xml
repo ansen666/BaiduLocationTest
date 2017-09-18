@@ -16,11 +16,11 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!--百度定位sdk需要服务-->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -34,7 +34,6 @@
         <!--从百度地图sdk官网申请的key-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="KeZZBFTk06eah8M4zG4IBCi2xjY5jIrV"/>
+            android:value="cMFNey4sY2GhlNPtCCX4G0A8SZUV8ujp"/>
     </application>
-
 </manifest>
